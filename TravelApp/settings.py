@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     # my
     'user',
+    'trip',
 ]
 
 MIDDLEWARE = [

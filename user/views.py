@@ -39,6 +39,6 @@ class LogoutView(APIView):
                 token.blacklist()
                 return Response(status=status.HTTP_205_RESET_CONTENT)
             else:
-                return Response({"detail": "No refresh token provided."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"detail": "Token nie został dany."}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
