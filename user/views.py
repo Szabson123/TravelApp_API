@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from drf_spectacular.utils import extend_schema
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LogoutSerializer
 from .models import CustomUser
-
+import logging
 
 class RegisterView(APIView):
     @extend_schema(
@@ -23,26 +23,22 @@ class RegisterView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     
+    
 class LogoutView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
+
     @extend_schema(
-        request={
-            'type': 'object',
-            'properties': {
-                'refresh': {'type': 'string', 'description': 'Refresh token'}
-            },
-            'required': ['refresh']
-        },
+        request=LogoutSerializer,
         responses={205: 'Token successfully blacklisted', 400: 'Invalid request'}
     )
     def post(self, request):
         try:
-            refresh_token = request.data.get('refresh')
+            refresh_token = request.data.get("refresh")
             if refresh_token:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
                 return Response(status=status.HTTP_205_RESET_CONTENT)
             else:
-                return Response("There is no token", status=status.HTTP_400_BAD_REQUEST)
+                return Response({"detail": "No refresh token provided."}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

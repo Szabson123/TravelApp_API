@@ -16,3 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         
         return user
+    
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
