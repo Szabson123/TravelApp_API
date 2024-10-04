@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 router=DefaultRouter()
 
-router.register('(?P<trip_pk>\d+)/(?P<needed_list_pk>\d+)', ItemListViewSet, basename='itemlist')
+router.register(r'neededlist/(?P<needed_list_pk>\d+)/items', ItemListViewSet, basename='itemlist')
 
 urlpatterns = [
     path('', include(router.urls))
