@@ -4,4 +4,4 @@ from .models import *
 
 admin.site.register(Trip)
 admin.site.register(NeededList)
-admin.site.register(ItemList)
+admin.site.register(Item)

@@ -1,25 +1,24 @@
 from rest_framework import serializers
 
-from .models import Trip, NeededList, ItemList
+from .models import Trip, NeededList, Item
+from user.serializers import UserSerializer
 
-
-class ItemListSerializer(serializers.ModelSerializer):
+class ItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ItemList
+        model = Item
         fields = ['id', 'name']
         
 
 class NeededListSerializer(serializers.ModelSerializer):
-    item = ItemListSerializer(many=True)
+    item = ItemSerializer(many=True)
     
     class Meta:
         model = NeededList
         fields = ['id', 'name', 'item']
     
     
-class TripSerializers(serializers.ModelSerializer):
-    items_list = NeededListSerializer
+class TripSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'item_list']
+        fields = ['id', 'name', 'user']
