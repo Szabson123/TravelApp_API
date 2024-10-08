@@ -21,6 +21,18 @@ class TripViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Trip.objects.filter(user=self.request.user)
     
+    
+class NeededListViewSet(viewsets.ModelViewSet):
+    serializer_class = NeededList
+    queryset = NeededList.objects.none()
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return NeededList.objects.filter(user=self.request.user)
+    
 
 class ItemListViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
