@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import Trip, NeededList, Item
-from user.serializers import UserSerializer
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,11 +9,11 @@ class ItemSerializer(serializers.ModelSerializer):
         
 
 class NeededListSerializer(serializers.ModelSerializer):
-    item = ItemSerializer(many=True)
-    
+    items = ItemSerializer(many=True, read_only=True, source='items')
+
     class Meta:
         model = NeededList
-        fields = ['id', 'name', 'item']
+        fields = ['id', 'name', 'items']
     
     
 class TripSerializer(serializers.ModelSerializer):
