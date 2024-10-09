@@ -6,15 +6,25 @@ class Item(models.Model):
     name = models.CharField(max_length=255)
     packed = models.BooleanField(default=False)
     
+    def __str__(self) -> str:
+        return self.name
+    
 
 class NeededList(models.Model):
     name = models.CharField(max_length=255)
-    item = models.ManyToManyField(Item, null=True, blank=True)
+    items = models.ManyToManyField(Item, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    
+    def __str__(self) -> str:
+        return self.name
 
 
 class Trip(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
     name = models.CharField(max_length=255)
-    item_list = models.ManyToManyField(NeededList, blank=True)
+    item_list = models.ForeignKey(NeededList, on_delete=models.CASCADE, blank=True, null=True)
+    
+    def __str__(self) -> str:
+        return self.name
     
 

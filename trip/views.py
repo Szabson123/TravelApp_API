@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from .models import Trip, NeededList, Item
 from .serializers import TripSerializer, NeededListSerializer, ItemSerializer
@@ -21,9 +22,20 @@ class TripViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Trip.objects.filter(user=self.request.user)
     
+    @action(detail=True, methods=['POST'])
+    def assign_list_to_trip(self, request, pk=None):
+        trip = get_object_or_404(Trip, pk=pk)
+        needed_list_id = request.data.get('needed_list_id')
+        needed_list = get_object_or_404(NeededList, pk=needed_list_id)
+        
+        trip.item_list= needed_list
+        trip.save()
+        
+        return Response({'status': 'Lista dodana do wycieczki'}, status=status.HTTP_200_OK)
+    
     
 class NeededListViewSet(viewsets.ModelViewSet):
-    serializer_class = NeededList
+    serializer_class = NeededListSerializer
     queryset = NeededList.objects.none()
     permission_classes = [IsAuthenticated]
     
@@ -33,22 +45,27 @@ class NeededListViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return NeededList.objects.filter(user=self.request.user)
     
-
-class ItemListViewSet(viewsets.ModelViewSet):
-    serializer_class = ItemSerializer
-    queryset = Item.objects.none()
+    @action(detail=True, methods=['POST'])
+    def add_and_create_item(self, request, pk=None):
+        needed_list = self.get_object()
+        name = request.data.get('name')
+        
+        item = Item.objects.create(
+            name = name
+        )
+        needed_list.items.add(item)
+        needed_list.save()
+        return Response({'status': 'Przedmiot dodany'}, status=status.HTTP_200_OK)
     
-    def get_queryset(self):
-        needed_list_id = self.kwargs['needed_list_pk']
-        return Item.objects.filter(items__id=needed_list_id)
-
-    def create(self, request, *args, **kwargs):
-        needed_list_id = self.kwargs.get('needed_list_pk')
-        neededlist = get_object_or_404(NeededList, pk=needed_list_id)
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        item = serializer.save()
-        neededlist.item.add(item)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    @action(detail=True, methods=['POST'])
+    def change_packed_and_unpacked(self, request, pk=None):
+        needed_list = self.get_object()
+        item_id = request.data.get('item_id')
+        item = get_object_or_404(Item, pk=item_id)
+        
+        item.packed = not item.packed
+        item.save()
+ 
+        
+        return Response({'status': 'Zmieniona stan'}, status=status.HTTP_200_OK)
+            

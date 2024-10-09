@@ -5,16 +5,16 @@ from .models import Trip, NeededList, Item
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'packed']
         
 
 class NeededListSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True, read_only=True, source='items')
+    item = ItemSerializer(many=True, read_only=True, source='items')
     user = serializers.ReadOnlyField(source='user.email')
     
     class Meta:
         model = NeededList
-        fields = ['id', 'name', 'items', 'user']
+        fields = ['id', 'name', 'item', 'user']
     
     
 class TripSerializer(serializers.ModelSerializer):
