@@ -24,7 +24,7 @@ class TripViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['POST'])
     def assign_list_to_trip(self, request, pk=None):
-        trip = get_object_or_404(Trip, pk=pk)
+        trip = self.get_object()
         needed_list_id = request.data.get('needed_list_id')
         needed_list = get_object_or_404(NeededList, pk=needed_list_id)
         
