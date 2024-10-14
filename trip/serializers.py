@@ -22,8 +22,17 @@ class NeededListSerializer(serializers.ModelSerializer):
 class TripSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
     budget = TripBudgetSerializer()
-
     class Meta:
         model = Trip
         fields = ['id', 'name', 'user', 'budget']
+        read_only_fields = ['user']
+
+
+class TripSerializerWithItems(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+    budget = TripBudgetSerializer()
+    item_list = NeededListSerializer()
+    class Meta:
+        model = Trip
+        fields = ['id', 'name', 'user', 'budget', 'item_list']
         read_only_fields = ['user']

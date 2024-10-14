@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
 from .models import Trip, NeededList, Item
-from .serializers import TripSerializer, NeededListSerializer, ItemSerializer
+from .serializers import TripSerializer, NeededListSerializer, ItemSerializer, TripSerializerWithItems
 
 
 
@@ -21,6 +21,12 @@ class TripViewSet(viewsets.ModelViewSet):
         
     def get_queryset(self):
         return Trip.objects.filter(user=self.request.user)
+    
+    @action(detail=True, methods=['GET'])
+    def with_items(self, request, pk=None):
+        trip = self.get_object()
+        serializer = TripSerializerWithItems(trip)
+        return Response(serializer.data)
     
     @action(detail=True, methods=['POST'])
     def assign_list_to_trip(self, request, pk=None):
@@ -68,4 +74,5 @@ class NeededListViewSet(viewsets.ModelViewSet):
  
         
         return Response({'status': 'Zmieniona stan'}, status=status.HTTP_200_OK)
+            
             
