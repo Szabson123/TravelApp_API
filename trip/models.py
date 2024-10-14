@@ -23,7 +23,7 @@ class Trip(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
     name = models.CharField(max_length=255)
     item_list = models.ForeignKey(NeededList, on_delete=models.CASCADE, blank=True, null=True)
-    budget = models.OneToOneField(TripBudget, on_delete=models.CASCADE)
+    budget = models.OneToOneField(TripBudget, on_delete=models.CASCADE, blank=True, null=True)
     
     def __str__(self) -> str:
         return self.name
