@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import Trip, NeededList, Item
 
+from money.serializers import TripBudgetSerializer
+
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
@@ -19,7 +21,9 @@ class NeededListSerializer(serializers.ModelSerializer):
     
 class TripSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
+    budget = TripBudgetSerializer()
+
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'user']
+        fields = ['id', 'name', 'user', 'budget']
         read_only_fields = ['user']
