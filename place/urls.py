@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 router=DefaultRouter()
 
-router.register(r'route', RouteViewSet, basename='route')
+router.register(r'(?P<trip_id>\d+)/routes', RouteViewSet, basename='trip-routes')
 
 urlpatterns = [
     path('', include(router.urls))
