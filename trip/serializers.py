@@ -4,6 +4,7 @@ from .models import Trip, NeededList, Item
 
 from money.serializers import TripBudgetSerializer
 from money.models import TripBudget
+from place.serializers import RouteToTripSerialzier
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,9 +34,10 @@ class TripSerializer(serializers.ModelSerializer):
 #Read
 class TripSerializerWithItems(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
-    budget = TripBudgetSerializer()
-    item_list = NeededListSerializer()
+    budget = TripBudgetSerializer(read_only=True)
+    item_list = NeededListSerializer(read_only=True)
+    routes = RouteToTripSerialzier(many=True)
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'user', 'budget', 'item_list', 'country']
+        fields = ['id', 'name', 'user', 'budget', 'item_list', 'country', 'routes']
         read_only_fields = ['user']

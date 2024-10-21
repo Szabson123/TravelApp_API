@@ -21,3 +21,11 @@ class RouteSerializer(serializers.ModelSerializer):
         
     def get_trip_name(self, obj):
         return obj.trip.name
+    
+
+class RouteToTripSerialzier(serializers.ModelSerializer):
+    places = PlaceSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Route
+        fields = ['id', 'name', 'description', 'places']

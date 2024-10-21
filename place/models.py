@@ -6,7 +6,7 @@ from user.models import CustomUser
 class Route(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    trip = models.ForeignKey(Trip, models.CASCADE)
+    trip = models.ForeignKey(Trip, models.CASCADE, related_name='routes')
     description = models.TextField()
 
 
