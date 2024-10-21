@@ -4,7 +4,7 @@ from money.models import TripBudget
 import pycountry
 
 
-COUNTRIES = [('None', 'None')] + [(country.alpha_2, country.name) for country in pycountry.countries]
+COUNTRIES = [('None', 'None')] + [(country.name, country.name) for country in pycountry.countries]
 
 
 class Item(models.Model):

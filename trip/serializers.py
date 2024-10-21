@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import Trip, NeededList, Item
 
 from money.serializers import TripBudgetSerializer
+from money.models import TripBudget
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,21 +19,23 @@ class NeededListSerializer(serializers.ModelSerializer):
         model = NeededList
         fields = ['id', 'name', 'item', 'user']
     
-    
+#CRUD 
 class TripSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
-    budget = TripBudgetSerializer()
+    budget = TripBudgetSerializer(read_only=True)
+
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'user', 'budget']
+        fields = ['id', 'name', 'user', 'budget', 'country']
         read_only_fields = ['user']
 
 
+#Read
 class TripSerializerWithItems(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
     budget = TripBudgetSerializer()
     item_list = NeededListSerializer()
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'user', 'budget', 'item_list']
+        fields = ['id', 'name', 'user', 'budget', 'item_list', 'country']
         read_only_fields = ['user']

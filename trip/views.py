@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -8,16 +8,23 @@ from rest_framework.decorators import action
 
 from .models import Trip, NeededList, Item
 from .serializers import TripSerializer, NeededListSerializer, ItemSerializer, TripSerializerWithItems
-
+from money.models import TripBudget
 
 
 class TripViewSet(viewsets.ModelViewSet):
     serializer_class = TripSerializer
     queryset = Trip.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        trip = serializer.save(user=self.request.user)
+        
+        budget_data = self.request.data.get('budget', None)
+        
+        if budget_data:
+            budget = TripBudget.objects.create(**budget_data)
+            trip.budget = budget
+            trip.save()
         
     def get_queryset(self):
         return Trip.objects.filter(user=self.request.user)
