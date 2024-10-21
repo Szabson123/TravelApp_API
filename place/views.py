@@ -29,5 +29,15 @@ class PlacesViewSet(viewsets.ModelViewSet):
     queryset = Place.objects.none()
     permission_classes = [permissions.AllowAny]
     
+    def perform_create(self, serializer):
+        
+        route_id = self.kwargs.get('route_id')
+        route = Route.objects.get(id=route_id)
+        serializer.save(route=route)
+        
+    def get_queryset(self):
+        route_id = self.kwargs.get('route_id')
+        return Route.objects.filter(route__id=route_id)
+    
 
     
