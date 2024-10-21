@@ -11,5 +11,6 @@ urlpatterns = [
     
     path('user/', include('user.urls')),
     path('trip-view/', include('trip.urls')),
-    path('money/', include('money.urls'))
+    path('money/', include('money.urls')),
+    path('route/', include('place.urls'))
 ]
